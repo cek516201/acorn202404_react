@@ -1,0 +1,11 @@
+/* src/App.css 파일 */
+.container{
+    width: 768px;
+    margin: 0 auto;
+}
+.box{
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+    background-color: yellow;
+}
