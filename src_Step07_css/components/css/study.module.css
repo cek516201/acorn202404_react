@@ -1,0 +1,15 @@
+/* src/components/ study.module.css */
+
+.box{
+    width: 150px;
+    height: 150px;
+    border: 1px solid green;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bg-yellow{
+    background-color: yellow;
+}
