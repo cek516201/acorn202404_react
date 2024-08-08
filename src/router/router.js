@@ -3,6 +3,7 @@ import App from '../App' //App Component 를 최상위 component 로 사용하�
 import Home from '../pages/Home'
 import Member from '../pages/Member'
 import MemberForm from '../pages/MemberForm'
+import MemberUpdateForm from '../pages/MemberUpdateForm'
 
 const { createBrowserRouter } = require("react-router-dom")
 
@@ -10,7 +11,8 @@ const { createBrowserRouter } = require("react-router-dom")
 const routes=[
     {path:"/", element: <Home/>},
     {path:"/members", element: <Member/>},
-    {path:"/members/new", element: <MemberForm/>}
+    {path:"/members/new", element: <MemberForm/>},
+    {path:"/members/:num/edit", element:<MemberUpdateForm/>}
 ]
 
 //BrowserRouter 를 만들기
