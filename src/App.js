@@ -1,14 +1,23 @@
 // App.css 적용하기 (내부 css)
+import { NavLink, useOutlet } from 'react-router-dom';
 import './App.css'
 
 //함수형 component
 function App() {
 
+  //현재 route 된 정보를 출력해주는 hook
+  const currentOutlet = useOutlet()
+
   return (
-    <div className="container">
-      <h1>인덱스 페이지 입니다</h1>
-      
-    </div>
+    <>
+      <ul>
+        <li><NavLink to="/">Home</NavLink></li>
+        <li><NavLink to="/members">Member</NavLink></li>
+      </ul>
+      <div className="container">
+        <div>{currentOutlet}</div>
+      </div>
+    </>
   );
 }
 
