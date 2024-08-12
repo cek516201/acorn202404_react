@@ -1,5 +1,7 @@
 // src/router/router.js
 import App from '../App' //App Component 를 최상위 component 로 사용하기 위해
+import Gallery from '../pages/Gallery'
+import GalleryForm from '../pages/GalleryForm'
 import Home from '../pages/Home'
 import Member from '../pages/Member'
 import MemberForm from '../pages/MemberForm'
@@ -12,7 +14,9 @@ const routes=[
     {path:"/", element: <Home/>},
     {path:"/members", element: <Member/>},
     {path:"/members/new", element: <MemberForm/>},
-    {path:"/members/:num/edit", element:<MemberUpdateForm/>}
+    {path:"/members/:num/edit", element:<MemberUpdateForm/>},
+    {path:"/gallery", element:<Gallery/>},
+    {path:"/gallery/new", element:<GalleryForm/>}
 ]
 
 //BrowserRouter 를 만들기

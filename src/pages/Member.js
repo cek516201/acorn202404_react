@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 
@@ -38,7 +39,7 @@ function Member() {
         <>  
             <Link to="/members/new">회원추가</Link>
             <h1>회원 목록 입니다</h1>
-            <table>
+            <Table striped bordered size="sm">
                 <thead>
                     <tr>
                         <th>번호</th>
@@ -66,7 +67,7 @@ function Member() {
                         </tr>)
                     }
                 </tbody>
-            </table>
+            </Table>
         </>
     );
 }
