@@ -11,7 +11,7 @@ import { decodeToken } from 'jsontokens';
 import axios from 'axios';
 // legacy_createStore 를 createStore 라는 이름으로 사용하기 (store 를 만들 함수)
 import { legacy_createStore as createStore } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch} from 'react-redux';
 
 // token 이 존재 한다면 token 에서 값을 읽어와서 저장할 변수 만들기
 let userName=null
@@ -78,7 +78,6 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
-
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

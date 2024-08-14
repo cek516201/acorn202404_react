@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import AlertModal from "./AlertModal";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 function BsNavBar() {
     //로그인된 사용자명이 있는지 store 에서 읽어와 본다.

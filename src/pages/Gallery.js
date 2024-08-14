@@ -35,7 +35,7 @@ function Gallery() {
     const [params , setParams] = useSearchParams({pageNum:1})
     
     console.log(params.get("pageNum"))
-
+   
     //겔러리 목록 데이터 읽어오는 함수 
     const refresh = (pageNum)=>{
         axios.get("/gallery?pageNum="+pageNum)
@@ -46,7 +46,9 @@ function Gallery() {
             //startPageNum, endPageNum 을 이용해서 pageArray 만들기 (state변경)
             setPageArray(range(res.data.startPageNum, res.data.endPageNum))
         })
-        .catch(error=>console.log(error))
+        .catch(error=>{
+            console.log("xxx")
+        })
     }
     /*
         useEffect(함수 , [])  -> component 활성화 시점에 함수가 한번만 호출된다.
