@@ -1,15 +1,19 @@
 // src/pages/GalleryForm.js
 
+import axios from "axios";
 import { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 
 function GalleryForm() {
 
     const dropZone = useRef()
     const imageInput = useRef()
+    const captionInput = useRef()
     //업로드할 선택된 이미지들을 관리할 상태값 (UI 를 출력하는데 필요한 값)
     const [imageData , setImageData] = useState([])
+    const navigate = useNavigate()
 
     const dropZoneStyle={
         minHeight:"300px",
@@ -122,17 +126,43 @@ function GalleryForm() {
             };
         }
     }
+    //업로드 버튼을 눌렀을때 호출되는 함수 
+    const handleUpload = ()=>{
+        //입력한 제목과 이미지 파일을 FormData 객체에 담는다 
+        const formData=new FormData()
+        // caption 이라는 키값으로 제목 담기 
+        formData.append("caption", captionInput.current.value)
+        //반복문 돌면서 선택한 파일을 모두 images 라는 키값으로 담아서
+        const files=imageInput.current.files //선택한 파일 배열 
+        for(let i=0; i<files.length; i++){
+            formData.append("images", files[i])
+        }
+       
+        axios.post("/gallery", formData, {
+            headers:{"Content-Type":"multipart/form-data"}
+        })
+        .then(res=>{
+            console.log(res.data)
+            //겔러리 목록 보기로 이동
+            alert("업로드 되었습니다!")
+            navigate("/gallery")
+        })
+    }
+
     return (
         <>
             <Form.Group className="mb-3" controlId="caption">
                 <Form.Label>설명</Form.Label>
-                <Form.Control type="text" name="caption" placeholder="설명 입력..." />
+                <Form.Control ref={captionInput} type="text" name="caption" placeholder="설명 입력..." />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="image">
+            <Form.Group controlId="image">
                 <Form.Label>이미지</Form.Label>
-                <Form.Control ref={imageInput} onChange={handleChange} type="file" name="image" accept="image/*" multiple/>
+                <Form.Control style={{display:"none"}} ref={imageInput} onChange={handleChange} type="file" name="image" accept="image/*" multiple/>
             </Form.Group>
-            <a href="javascript:" onClick={()=>imageInput.current.click()}>
+            <a href="about:blank" onClick={(e)=>{
+                e.preventDefault()//빈페이지를 띄울려고하는 기본 동작 막기
+                imageInput.current.click() //파일 선택창 띄우기
+            }}>
                 <div ref={dropZone} onDragOver={(e)=>e.preventDefault()}
                     onDrop={handleDrop} style={dropZoneStyle} className="mb-3">
                     {
@@ -142,7 +172,7 @@ function GalleryForm() {
                     }
                 </div>
             </a>
-            <Button variant="success">업로드</Button>
+            <Button onClick={handleUpload} variant="success">업로드</Button>
         </>
     );
 }
