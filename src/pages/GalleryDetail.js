@@ -4,7 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Card, Pagination } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import ConfirmModal from "../components/ComfirmModal";
 
 function GalleryDetail() {
     // "/gallery/:num" 에서 num 에 해당하는 경로 파라미터 값 읽어오기
@@ -31,8 +32,29 @@ function GalleryDetail() {
         })
     }, [num])
 
+    //Confirm 모달을 띄울지 여부를 상태값으로 관리하기 
+    const [confirmShow, setConfirmShow]=useState(false)
+
+    const navigate = useNavigate()
+
+    const handleYes = ()=>{
+        //삭제 요청을 한다.
+        axios.delete(`/gallery/${num}`)
+        .then(res=>{
+            //삭제후에 겔러리 목록 보기로 이동
+            navigate(`/gallery`)
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
+    const handleNo = ()=>{
+        setConfirmShow(false)
+    }
+
     return (
-        <>
+        <>  
+            <ConfirmModal show={confirmShow} message="삭제하시겠습니까?" yes={handleYes} no={handleNo}/>
             <h1>Gallery 자세히 보기 페이지</h1>
             {   state && 
                 <>
@@ -47,7 +69,7 @@ function GalleryDetail() {
                             <Card.Text>writer : {state.writer}</Card.Text>
                             <Card.Text>{state.regdate}</Card.Text>
                             { userName === state.writer &&
-                               <Button variant="danger">삭제</Button>
+                               <Button variant="danger" onClick={()=>setConfirmShow(true)}>삭제</Button>
                             }
                         </Card.Body>
                     </Card>
