@@ -34,7 +34,8 @@ function Gallery() {
     */
     const [params , setParams] = useSearchParams({pageNum:1})
     
-    console.log(params.get("pageNum"))
+    //페이지 이동을 위한 함수
+    const navigate = useNavigate()
    
     //겔러리 목록 데이터 읽어오는 함수 
     const refresh = (pageNum)=>{
@@ -78,7 +79,8 @@ function Gallery() {
                                 <Card.Body>
                                     <Card.Text>{item.caption}</Card.Text>
                                     <Card.Text>writer : <strong>{item.writer}</strong></Card.Text>
-                                    <Button>자세히 보기</Button>
+                                    <Button onClick={()=>navigate(`/gallery/${item.num}`)}>자세히 보기</Button>
+                                    <Button variant="success" as={Link} to={`/gallery/${item.num}`}>자세히 보기</Button>
                                 </Card.Body>
                             </Card>
                         </Col>

@@ -2,6 +2,7 @@
 import App from '../App' //App Component 를 최상위 component 로 사용하기 위해
 import ProtectedRoute from '../components/ProtectedRoute'
 import Gallery from '../pages/Gallery'
+import GalleryDetail from '../pages/GalleryDetail'
 import GalleryForm from '../pages/GalleryForm'
 import Home from '../pages/Home'
 import Member from '../pages/Member'
@@ -17,7 +18,8 @@ const routes=[
     {path:"/members/new", element: <MemberForm/>},
     {path:"/members/:num/edit", element:<MemberUpdateForm/>},
     {path:"/gallery", element:<Gallery/>},
-    {path:"/gallery/new", element: <ProtectedRoute><GalleryForm/></ProtectedRoute>}
+    {path:"/gallery/new", element: <ProtectedRoute><GalleryForm/></ProtectedRoute>},
+    {path:"/gallery/:num", element: <GalleryDetail/>}
 ]
 
 //BrowserRouter 를 만들기
