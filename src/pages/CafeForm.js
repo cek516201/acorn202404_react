@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
 import { initEditor } from "../editor/SmartEditor";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function CafeForm() {
 
@@ -19,6 +20,8 @@ function CafeForm() {
     //입력한 내용을 얻어오기 위한 useRef()  
     const inputTitle=useRef()
     const inputContent=useRef()
+    //경로 이동을 할 함수 
+    const navigate = useNavigate()
 
     return (
         <>
@@ -40,9 +43,12 @@ function CafeForm() {
                     const title=inputTitle.current.value
                     const content=inputContent.current.value
                     //axios 를 이용해서 api 서버에 전송
-                    axios.post("/cafe", {title, content})
+                    axios.post("/cafes", {title, content})
                     .then(res=>{
                         console.log(res.data)
+                        alert("저장했습니다")
+                        //글 목록 보기로 이동 
+                        navigate("/cafes")
                     })
                     .catch(error=>{
                         console.log(error)

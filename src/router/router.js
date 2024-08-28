@@ -22,8 +22,8 @@ const routes=[
     {path:"/gallery", element:<Gallery/>},
     {path:"/gallery/new", element: <ProtectedRoute><GalleryForm/></ProtectedRoute>},
     {path:"/gallery/:num", element: <GalleryDetail/>},
-    {path:"/cafe", element: <Cafe/>},
-    {path:"/cafe/new", element: <ProtectedRoute><CafeForm/></ProtectedRoute>}
+    {path:"/cafes", element: <Cafe/>},
+    {path:"/cafes/new", element: <ProtectedRoute><CafeForm/></ProtectedRoute>}
 ]
 
 //BrowserRouter 를 만들기
