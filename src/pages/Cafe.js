@@ -74,6 +74,24 @@ function Cafe() {
         const query = new URLSearchParams(searchState).toString()
         navigate(`/cafes?pageNum=${pageNum}&${query}`)
     }
+    // 검색조건을 변경하거나 검색어를 입력하면 호출되는 함수 
+    const handleSearchChange = (e)=>{
+        setSearchState({
+            ...searchState,
+            [e.target.name]:e.target.value  //검색조건혹은 검색키워드가 변경된 값을 반영한다.
+        })
+    }
+
+    //Reset 버튼을 눌렀을때
+    const handleReset = ()=>{
+        //검색조건과 검색어 초기화 
+        setSearchState({
+            condition:"",
+            keyword:""
+        })
+        //1페이지 내용이 보여지게
+        move(1)
+    }
 
     return (
         <>
@@ -115,6 +133,17 @@ function Cafe() {
                 }
                 <Pagination.Item onClick={()=>move(pageInfo.endPageNum+1)} disabled={pageInfo.endPageNum >= pageInfo.totalPageCount}>&raquo;</Pagination.Item>            
             </Pagination>
+            <label htmlFor="search">검색조건</label>
+            <select onChange={handleSearchChange} value={searchState.condition} name="condition" id="search">
+                <option value="">선택</option>
+                <option value="title_content">제목+내용</option>
+                <option value="title">제목</option>
+                <option value="writer">작성자</option>
+            </select>
+            <input onChange={handleSearchChange} value={searchState.keyword} type="text" placeholder="검색어..." name="keyword"/>
+            <button onClick={()=>move()}>검색</button>
+            <button onClick={handleReset}>Reset</button>
+            <p><strong>{pageInfo.totalRow}</strong> 개의 글이 있습니다</p>
         </>
     );
 }
