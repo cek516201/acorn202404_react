@@ -2,8 +2,8 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
-import { Link, useSearchParams } from "react-router-dom";
+import { Pagination, Table } from "react-bootstrap";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 
 function Cafe() {
@@ -20,6 +20,8 @@ function Cafe() {
 
     // "/cafes?pageNum=x" 에서 pageNum 을 추출하기 위한 Hook   
     const [params, setParams]=useSearchParams({pageNum:1})
+    //페이징 숫자를 출력할때 사용하는 배열을 상태값으로 관리 하자
+    const [pageArray, setPageArray]=useState([])
 
     //글 목록 데이터 새로 읽어오는 함수
     const refresh = (pageNum)=>{
@@ -31,11 +33,15 @@ function Cafe() {
             console.log(res.data)
             //서버로 부터 응답된 데이터를 state 로 넣어준다
             setPageInfo(res.data)
+            //페이징 처리에 관련된 배열을 만들어서 state 로 넣어준다.
+            const result=range(res.data.startPageNum, res.data.endPageNum)
+            setPageArray(result)
         })
         .catch(error=>{
             console.log(error)
         })
     }
+    
     /*
         useEffect() 안에 전달한 함수는
         1. Cafe 컴포넌트가 활성화 되는 시점에 1번 호출된다.
@@ -50,6 +56,24 @@ function Cafe() {
         refresh(pageNum)
     }, [params])
 
+    //페이지를 이동할 hook
+    const navigate = useNavigate()
+
+    //페이징 UI 를 만들때 사용할 배열을 리턴해주는 함수 
+    function range(start, end) {
+        const result = [];
+        for (let i = start; i <= end; i++) {
+            result.push(i);
+        }
+        return result;
+    }
+    
+    // navigate() 함수를 이용해서 페이지를 변경하는 함수
+    const move = (pageNum=1)=>{
+        //검색조건에 맞는 query 문자열을 얻어내기 
+        const query = new URLSearchParams(searchState).toString()
+        navigate(`/cafes?pageNum=${pageNum}&${query}`)
+    }
 
     return (
         <>
@@ -79,6 +103,18 @@ function Cafe() {
                     }
                 </tbody>
             </Table>
+            <Pagination className="mt-3">
+                <Pagination.Item onClick={()=>move(pageInfo.startPageNum-1)} disabled={pageInfo.startPageNum === 1}>&laquo;</Pagination.Item>
+                {
+                    pageArray.map(item=>(
+                        <Pagination.Item onClick={()=>move(item)} key={item} 
+                            active={pageInfo.pageNum === item}>
+                            {item}
+                        </Pagination.Item>
+                    ))
+                }
+                <Pagination.Item onClick={()=>move(pageInfo.endPageNum+1)} disabled={pageInfo.endPageNum >= pageInfo.totalPageCount}>&raquo;</Pagination.Item>            
+            </Pagination>
         </>
     );
 }
