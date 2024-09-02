@@ -112,7 +112,9 @@ function Cafe() {
                         pageInfo.list.map(item=>(
                             <tr key={item.num}>
                                 <td>{item.num}</td>
-                                <td>{item.title}</td>
+                                <td>
+                                    <Link to={`/cafes/${item.num}?condition=${searchState.condition}&keyword=${searchState.keyword}`}>{item.title}</Link>
+                                </td>
                                 <td>{item.writer}</td>
                                 <td>{item.viewCount}</td>
                                 <td>{item.regdate}</td>

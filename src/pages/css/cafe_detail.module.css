@@ -1,0 +1,79 @@
+/* src/pages/css/cafe_detail.module.css */
+
+.content{
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 댓글 프로필 이미지를 작은 원형으로 만든다. */
+.profile-image{
+    width: 50px;
+    height: 50px;
+    border: 1px solid #cecece;
+    border-radius: 50%;
+}
+
+/* ul 요소의 기본 스타일 제거 */
+.comments ul{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+/* 답글 아이콘은 일단 보이지 않게  */
+.reply-icon{
+    display: none;
+}
+
+/* .reply_icon 을 li 요소를 기준으로 배치 하기 */
+.comments li{
+    position: relative;
+}
+.comments .reply-icon{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: red;
+}
+
+.comment-form, .re-insert-form, .update-form{
+    display: flex;
+}
+.comment-form textarea, .re-insert-form textarea, .update-form textarea{
+    height: 100px;
+    flex-grow: 1;
+}
+.comment-form button, .re-insert-form button, .update-form button{
+    flex-basis: 100px;
+}
+/* 대댓글 폼과 댓글 수정폼은 일단 숨겨 놓는다 */
+.re-insert-form, .update-form{
+    display: none;
+}
+/* 대댓글을 들여 쓰기 위한 클래스 */
+.indent{
+    padding-left: 50px;
+}
+
+/* 댓글 출력 디자인 */
+.comments pre {
+  display: block;
+  padding: 9.5px;
+  margin: 5px 0;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}	
+/* flex layout 으로 변경하고 자식 컨텐츠를 y 축(cross축) 기준으로 가운데 정렬하도록 한다 */
+.comments dt{
+    display: flex;
+    align-items: center;
+}
+/* 댓글 기능 버튼을 우측 끝에 배치하기 위해 */
+.comments dt small{
+    margin-right:auto;
+}

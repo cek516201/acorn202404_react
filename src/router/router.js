@@ -2,6 +2,7 @@
 import App from '../App' //App Component 를 최상위 component 로 사용하기 위해
 import ProtectedRoute from '../components/ProtectedRoute'
 import Cafe from '../pages/Cafe'
+import CafeDetail from '../pages/CafeDetail'
 import CafeForm from '../pages/CafeForm'
 import Gallery from '../pages/Gallery'
 import GalleryDetail from '../pages/GalleryDetail'
@@ -23,7 +24,8 @@ const routes=[
     {path:"/gallery/new", element: <ProtectedRoute><GalleryForm/></ProtectedRoute>},
     {path:"/gallery/:num", element: <GalleryDetail/>},
     {path:"/cafes", element: <Cafe/>},
-    {path:"/cafes/new", element: <ProtectedRoute><CafeForm/></ProtectedRoute>}
+    {path:"/cafes/new", element: <ProtectedRoute><CafeForm/></ProtectedRoute>},
+    {path:"/cafes/:num", element: <CafeDetail/>}
 ]
 
 //BrowserRouter 를 만들기
