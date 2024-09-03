@@ -4,6 +4,7 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import Cafe from '../pages/Cafe'
 import CafeDetail from '../pages/CafeDetail'
 import CafeForm from '../pages/CafeForm'
+import CafeUpdateForm from '../pages/CafeUpdateForm'
 import Gallery from '../pages/Gallery'
 import GalleryDetail from '../pages/GalleryDetail'
 import GalleryForm from '../pages/GalleryForm'
@@ -25,7 +26,8 @@ const routes=[
     {path:"/gallery/:num", element: <GalleryDetail/>},
     {path:"/cafes", element: <Cafe/>},
     {path:"/cafes/new", element: <ProtectedRoute><CafeForm/></ProtectedRoute>},
-    {path:"/cafes/:num", element: <CafeDetail/>}
+    {path:"/cafes/:num", element: <CafeDetail/>},
+    {path:"/cafes/:num/edit", element : <ProtectedRoute><CafeUpdateForm/></ProtectedRoute>}
 ]
 
 //BrowserRouter 를 만들기

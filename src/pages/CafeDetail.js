@@ -2,12 +2,14 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 //css import
 import myCss from './css/cafe_detail.module.css'
 //binder import
 import binder from 'classnames/bind'
+import { useSelector } from "react-redux";
+import { Button } from "react-bootstrap";
 //cx 함수 
 const cx=binder.bind(myCss)
 
@@ -33,8 +35,12 @@ function CafeDetail() {
             console.log(error)
         })
         
-    }, [])
-
+    }, [num]) //경로 파라미터가 변경될때 서버로 부터 데이터를 다시 받아오도록 한다.
+    
+    //로그인된 사용자명이 store 에 있는지 읽어와 본다. 
+    const userName=useSelector(state=>state.userName)
+    //javascript 로 경로 이동하기 위한 Hook
+    const navigate=useNavigate()
     return (
         <div>
             <nav>
@@ -44,7 +50,15 @@ function CafeDetail() {
                     <li className="breadcrumb-item active">Detail</li>
                 </ol>
 		    </nav>
+            { state.prevNum !== 0 ? <Link to={`/cafes/${state.prevNum}?${new URLSearchParams(params).toString()}`}>이전글</Link> : ""}
+            { state.nextNum !== 0 ? <Link to={`/cafes/${state.nextNum}?${new URLSearchParams(params).toString()}`}>다음글</Link> : ""}
             <h1>글 자세히 보기 페이지</h1>
+            {   params.get("condition") &&
+                <p>
+                    <strong>{params.get("condition")}</strong> 조건
+                    <strong>{params.get("keyword")}</strong> 검색어로 검색된 내용
+                </p>
+            }
             <table>
                 <thead>
                     <tr>
@@ -66,6 +80,12 @@ function CafeDetail() {
                 </thead>
             </table>
             <div className={cx("content")} dangerouslySetInnerHTML={{__html:state.content}}></div>
+            {
+                userName === state.writer && <>
+                    <Button variant="warning" onClick={()=>navigate(`/cafes/${num}/edit`)}>수정</Button>
+                    <Button variant="danger">삭제</Button>
+                </>
+            }
         </div>
     );
 }
