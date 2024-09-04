@@ -46,7 +46,14 @@ function CafeDetail() {
     const [confirmShow, setConfirmShow]=useState(false)
     //글 삭제 확인을 눌렀을때 호출되는 함수 
     const handleYes = ()=>{
-
+        axios.delete(`/cafes/${num}`)
+        .then(res=>{
+            console.log(res.data)
+            navigate("/cafes")
+        })
+        .catch(error=>{
+            console.log(error)
+        })
     }
 
     return (
