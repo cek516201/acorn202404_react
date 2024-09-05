@@ -45,6 +45,25 @@ function CafeUpdateForm() {
         .catch(error=>{
             console.log(error)
         })
+        
+        const handleResize = ()=>{
+            //리사이즈 될때마다 초기화를 다시한다 
+            setEditorTool(initEditor("content")); 
+        }
+        //window 가 resize 될때 마다 동작할 리스너 함수 등록하기
+        window.addEventListener("resize", handleResize)
+        
+        console.log("CafeUpdateForm 이 활성화됨")
+        /*
+            useEffect() 에 전달한 함수 안에서 리턴해주는 함수는 해당 컴포넌트가
+            비활성화 되는 시점에 호출된다. 따라서 해당 컴포넌트에서 무언가 마무리 작업을 
+            할께 있으면 리턴해주는 함수 안에서 작업하면 된다. 
+        */
+        return ()=>{
+            console.log("언제 호출되지?")
+            //이벤트 리스너 제거 하기 
+            window.removeEventListener("resize", handleResize)
+        }
     }, [])
 
     return (
