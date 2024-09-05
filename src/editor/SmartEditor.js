@@ -211,6 +211,10 @@ function initEditor(id="content"){ // id 는 textarea 의 아이디
     oEditors.exec = function(){
         this.getById[id].exec("UPDATE_CONTENTS_FIELD", []);
     }
+    // SmartEditor 에 새로운 내용으로 덮어쓰기
+    oEditors.setContents = function(contents){
+        this.getById[id].setContents(contents);
+    }
 
     return oEditors;
 }

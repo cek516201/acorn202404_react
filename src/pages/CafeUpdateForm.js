@@ -24,8 +24,8 @@ function CafeUpdateForm() {
     const handleCancel = ()=>{
         //저장된 내용을 이용해서 원상 복귀 시킨다
         inputTitle.current.value=savedData.title
-        inputContent.current.value=savedData.content
-        setEditorTool(initEditor("content")); 
+        //저장된 내용을 SmartEditor 에 덮어쓰기 한다 
+        editorTool.setContents(savedData.content)
     }
 
     useEffect(()=>{
