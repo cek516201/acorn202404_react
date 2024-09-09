@@ -8,7 +8,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import myCss from './css/cafe_detail.module.css'
 //binder import
 import binder from 'classnames/bind'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import ConfirmModal from "../components/ComfirmModal";
 //cx 함수 
@@ -55,6 +55,37 @@ function CafeDetail() {
             console.log(error)
         })
     }
+
+    const dispatch=useDispatch()
+
+    const handleCommentSubmit = (e)=>{
+        e.preventDefault() //폼 전송을 막기
+
+        //만일 로그인 하지 않았다면
+        if(!userName){
+            //로그인 모달을 띄운다
+            const payload={show:true, message:"댓글 저장을 위해 로그인이 필요합니다"}
+            dispatch({type:"LOGIN_MODAL", payload})
+            return; //여기서 함수를 종료한다 
+        }
+
+        const action=e.target.action //action
+        const method=e.target.method //method "post"
+        //form 에 입력한 내용을 FormData 객체에 담기 ( input 요소에 name 속성이 반드시 필요!)
+        const formData=new FormData(e.target) 
+        //FormData 에 입력한 내용을 object 로 변환 해서 json 문자열을 서버에 전송할수도 있다.
+        //const obj = Object.fromEntries(formData.entries())
+
+        axios[method](action, formData)
+        .then(res=>{
+            console.log(res.data)
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
+    
+    
 
     return (
         <div>
@@ -105,7 +136,10 @@ function CafeDetail() {
                 yes={handleYes} no={()=>setConfirmShow(false)}/>
 
             <h3>댓글을 입력하여 주세요</h3>
-            <form className={cx("comment-form")} action={`/cafes/${state.num}/comments`} method="post">
+            <form className={cx("comment-form")} 
+                action={`/cafes/${state.num}/comments`} 
+                method="post"
+                onSubmit={handleCommentSubmit}>
                 <input type="hidden" name="ref_group" defaultValue={state.num}/>
                 <input type="hidden" name="target_id" defaultValue={state.writer}/>
                 <textarea name="content"></textarea>
