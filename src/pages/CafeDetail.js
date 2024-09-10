@@ -22,6 +22,8 @@ function CafeDetail() {
     const [state, setState]=useState({})
     //검색 키워드 관련처리
     const [params, setParams]=useSearchParams()
+    //댓글 목록을 상태값으로 관리
+    const [commentList, setCommentList]=useState([])
 
     useEffect(()=>{
         //서버에 요청을 할때 검색 키워드 관련 정보도 같이 보낸다.
@@ -31,6 +33,8 @@ function CafeDetail() {
         .then(res=>{
             console.log(res.data)
             setState(res.data.dto)
+            //댓글 목록
+            setCommentList(res.data.commentList)
         })
         .catch(error=>{
             console.log(error)
@@ -78,7 +82,13 @@ function CafeDetail() {
 
         axios[method](action, formData)
         .then(res=>{
+            //방금 저장한 댓글의 정보 
             console.log(res.data)
+            //이 댓글을 commentList 의 가장 앞쪽에(임시로) 끼워 넣기
+            commentList.splice(0, 0, res.data)
+            //끼워 넣은 새로운 배열로 상태값을 변경한다.
+            setCommentList([...commentList])
+
         })
         .catch(error=>{
             console.log(error)
@@ -144,7 +154,25 @@ function CafeDetail() {
                 <input type="hidden" name="target_id" defaultValue={state.writer}/>
                 <textarea name="content"></textarea>
                 <button type="submit">등록</button>
-            </form>    
+            </form>
+            {/* 댓글 목록 출력하기 */}
+            <div className={cx("comments")}>
+                <ul>
+                    {
+                        commentList.map(item=>(
+                            <li key={item.num}>
+                                <dl>
+                                    <dt>
+                                        <span>{item.writer}</span>
+                                        <small>{item.regdate}</small>
+                                    </dt>
+                                    <dd><pre>{item.content}</pre></dd>
+                                </dl>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>    
         </div>
     );
 }
