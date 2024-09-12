@@ -14,6 +14,8 @@ import ConfirmModal from "../components/ComfirmModal";
 //cx 함수 
 const cx=binder.bind(myCss)
 
+//새로 등록한 댓글을 추가할 인덱스
+let commentIndex=0
 
 function CafeDetail() {
     // "/cafes/:num" 에서 num 에 해당되는 경로 파라미터 값 읽어오기
@@ -96,11 +98,12 @@ function CafeDetail() {
                 {num:x, content:"xxx", ... , ref:{current:x}}
             */
             newComment.ref=createRef()
-            //이 댓글을 commentList 의 가장 앞쪽에(임시로) 끼워 넣기
-            commentList.splice(0, 0, newComment)
+            //이 댓글을 commentIndex 에 끼워 넣기
+            commentList.splice(commentIndex, 0, newComment)
             //끼워 넣은 새로운 배열로 상태값을 변경한다.
             setCommentList([...commentList])
-
+            //댓글 입력한 textarea 초기화 
+            e.target.content.value=""
         })
         .catch(error=>{
             console.log(error)
@@ -165,15 +168,21 @@ function CafeDetail() {
                 <input type="hidden" name="ref_group" defaultValue={state.num}/>
                 <input type="hidden" name="target_id" defaultValue={state.writer}/>
                 <textarea name="content"></textarea>
-                <button type="submit">등록</button>
+                <button type="submit" onClick={()=>commentIndex=0}>등록</button>
             </form>
             {/* 댓글 목록 출력하기 */}
             <div className={cx("comments")}>
                 <ul>
                     {
-                        commentList.map(item=>(
+                        commentList.map((item, index) => (
                             <li key={item.num}
-                                ref={item.ref}>
+                                ref={item.ref}
+                                className={cx({indent:item.num !== item.comment_group})}>
+                                <svg style={{
+                                    display: item.num !== item.comment_group ? 'inline':'none'
+                                }}  className={cx('reply-icon')} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
+                                </svg>    
                                 <dl>
                                     <dt>
                                         { 
@@ -209,7 +218,11 @@ function CafeDetail() {
                                     <input type="hidden" name="comment_group" defaultValue={item.comment_group}/>
                                     <textarea name="content"></textarea>
                                     <button type="submit" onClick={()=>{
-
+                                        item.ref.current.querySelector("."+cx("re-insert-form"))
+                                            .style.display="none"
+                                        item.ref.current.querySelector(".answer-btn").innerText="답글"
+                                        //새로운 댓글은 이 폼이 속해있는 댓글의 인덱스 바로 다음 인덱스에 추가 되어야 한다.
+                                        commentIndex = index + 1
                                     }}>등록</button>
                                 </form>
                             </li>
