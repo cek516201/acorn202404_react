@@ -26,6 +26,12 @@ function CafeDetail() {
     const [params, setParams]=useSearchParams()
     //댓글 목록을 상태값으로 관리
     const [commentList, setCommentList]=useState([])
+    //댓글의 현재 페이지 번호
+    const [pageNum, setPageNum]=useState(1)
+    //댓글 전체 페이지의 갯수(마지막 페이지 번호)
+    const [totalPageCount, setTotalPageCount] = useState(0)
+    //현재 로딩중인지 여부 
+    const [isLoading, setLoading] = useState(false)
 
     useEffect(()=>{
         //서버에 요청을 할때 검색 키워드 관련 정보도 같이 보낸다.
@@ -42,6 +48,8 @@ function CafeDetail() {
             })
             //댓글 목록
             setCommentList(list)
+            //전체 댓글 페이지의 갯수를 상태값으로 넣어주기 
+            setTotalPageCount(res.data.totalPageCount)
         })
         .catch(error=>{
             console.log(error)
@@ -110,7 +118,86 @@ function CafeDetail() {
         })
     }
     
+    //삭제할 댓글 번호와 삭제할 댓글이 출력된 li 요소의 참조값을 전달받는 함수 
+    const handleDelete = (commentNum, ref)=>{
+        axios.delete(`/cafes/${num}/comments/${commentNum}`)
+        .then(res=>{
+            //ref.current.innerHTML="<p>삭제된 댓글입니다</p>"
+            /*
+                ref.current 는 li 요소의 참조값
+                ref.current.querySelector("dl") 은  li 요소의 자손 중에서 dl 요소를 찾아서 참조값 가져오기
+                .outerHTML = "새로운 요소"   는  새로운 요소로 대체(replace) 하기 
+            */
+            ref.current.querySelector("dl").outerHTML="<p>삭제된 댓글입니다</p>"
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
     
+    //댓글 수정 확인 버튼 눌렀을때 실행할 함수
+    const handleUpdateSubmit = (e)=>{
+        e.preventDefault()
+        const action=e.target.action 
+        const formData = new FormData(e.target)
+        //const method=e.target.method // patch 
+        
+        axios.patch(action, formData) 
+        .then(res=>{
+            //res.data 는 수정한 댓글 정보 
+            console.log(res.data)
+            //수정한 댓글이 UI 에 반영되도록
+            const newList=commentList.map(item=>{
+                //수정한 댓글을 목록에서 찾아서 content 를 수정해준다.
+                if(item.num === res.data.num){
+                    item.content=res.data.content
+                }
+                return item
+            })
+            //새로운 배열로 상태값 변경
+            setCommentList(newList)
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
+    
+    //댓글 더보기 버튼을 눌렀을때 실행할 함수 
+    const handleMoreComment = ()=>{
+        //현재 댓글의 페이지가 마지막 페이지 인지 여부를 알아내서
+        const isLast = pageNum >= totalPageCount
+        //만일 마지막 페이지라면
+        if(isLast){
+            alert("댓글의 마지막 페이지 입니다")
+        }else{//마지막 페이지가 아니라면 
+            //로딩 상태로 바꿔준다
+            setLoading(true)
+            //서버에 데이터를 추가 데이터를 요청해서 
+            //요청할 댓글의 페이지
+            const page=pageNum+1 //현재 댓글의 페이지 + 1 
+            axios.get(`/cafes/${num}/comments?pageNum=${page}`)
+            .then(res=>{
+                //res.data 에는 댓글 목록과 댓글 전체 페이지의 갯수가 들어 있다. 
+                console.log(res.data)
+                // 댓글 목록에 ref 를 추가한 새로운 배열을 얻어내서 
+                const newList=res.data.commentList.map(item=>{
+                    item.ref=createRef()
+                    return item;
+                })
+                //현재까지 출력된 댓글 목록에 새로운 댓글목록이 병합된 새로운 배열로 상태값 변경 
+                //댓글목록 데이터 변경하기
+                setCommentList([...commentList, ...newList])
+                setTotalPageCount(res.data.totalPageCount)
+                //증가된 페이지 번호도 반영
+                setPageNum(page)
+                setLoading(false)
+            })
+            .catch(error=>{
+                setLoading(false)
+            })
+            
+        }
+    }
 
     return (
         <div>
@@ -182,33 +269,55 @@ function CafeDetail() {
                                     display: item.num !== item.comment_group ? 'inline':'none'
                                 }}  className={cx('reply-icon')} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
-                                </svg>    
-                                <dl>
-                                    <dt>
-                                        { 
-                                            item.profile === null ? <svg className={cx('profile-image')} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                                </svg>
-                                            : <img className={cx('profile-image')} src={`/upload/images/${item.profile}`} alt="프로필 이미지" />
-                                        }
-                                        <span>{item.writer}</span>
-                                        { item.num !== item.comment_group ? <i>@{item.target_id}</i> : null}
-                                        <small>{item.regdate}</small>
-                                        <Button variant="outline-success" size="sm" className="answer-btn" onClick={(e)=>{
-                                            //현재 버튼의 텍스트
-                                            const text=e.target.innerText
-                                            if(text === "답글"){
-                                                e.target.innerText="취소"
-                                                item.ref.current.querySelector("."+cx("re-insert-form")).style.display="flex"
-                                            }else{
-                                                e.target.innerText="답글"
-                                                item.ref.current.querySelector("."+cx("re-insert-form")).style.display="none"     
+                                </svg>
+                                {   item.deleted === "yes" ? <p>삭제된 댓글입니다</p> : 
+                                    <dl>
+                                        <dt>
+                                            { 
+                                                item.profile === null ? <svg className={cx('profile-image')} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                                    </svg>
+                                                : <img className={cx('profile-image')} src={`/upload/images/${item.profile}`} alt="프로필 이미지" />
                                             }
-                                        }}>답글</Button>
-                                    </dt>
-                                    <dd><pre>{item.content}</pre></dd>
-                                </dl>
+                                            <span>{item.writer}</span>
+                                            { item.num !== item.comment_group ? <i>@{item.target_id}</i> : null}
+                                            <small>{item.regdate}</small>
+                                            <Button variant="outline-success" size="sm" className="answer-btn" onClick={(e)=>{
+                                                //현재 버튼의 텍스트
+                                                const text=e.target.innerText
+                                                if(text === "답글"){
+                                                    e.target.innerText="취소"
+                                                    item.ref.current.querySelector("."+cx("re-insert-form")).style.display="flex"
+                                                }else{
+                                                    e.target.innerText="답글"
+                                                    item.ref.current.querySelector("."+cx("re-insert-form")).style.display="none"     
+                                                }
+                                            }}>답글</Button>
+                                            { item.writer === userName && <> 
+                                                <Button className="update-btn" variant="outline-warning" size="sm" onClick={(e)=>{
+                                                    //현재 버튼의 텍스트
+                                                    const text=e.target.innerText
+                                                     if(text === "수정"){
+                                                        e.target.innerText="수정취소"
+                                                        item.ref.current.querySelector("."+cx("update-form"))
+                                                            .style.display="flex"
+                                                     }else{
+                                                        e.target.innerText="수정"
+                                                        item.ref.current.querySelector("."+cx("update-form"))
+                                                            .style.display="none"
+                                                     }
+                                                }}>수정</Button>
+                                                <Button variant="outline-danger" size="sm" onClick={()=>{
+                                                    //handleDelete() 함수 호출하면서 댓글의 번호와 댓글이 출력된 li 의 참조를 전달
+                                                    handleDelete(item.num, item.ref)
+                                                }}>삭제</Button>
+                                            </> 
+                                            }
+                                        </dt>
+                                        <dd><pre>{item.content}</pre></dd>
+                                    </dl>
+                                }
                                 <form action={`/cafes/${num}/comments`}
                                     className={cx(`re-insert-form`)}
                                     onSubmit={handleCommentSubmit}
@@ -225,10 +334,36 @@ function CafeDetail() {
                                         commentIndex = index + 1
                                     }}>등록</button>
                                 </form>
+                                {
+                                    item.writer === userName &&
+                                    <form className={cx('update-form')}
+                                        action={`/cafes/${num}/comments/${item.num}`}
+                                        method="patch"
+                                        onSubmit={handleUpdateSubmit}>
+                                        <input type="hidden" name="num" defaultValue={item.num}/>
+                                        <textarea name="content" defaultValue={item.content}></textarea>
+                                        <button type="submit" onClick={()=>{
+                                            item.ref.current.querySelector("."+cx("update-form")).style.display="none"
+                                            item.ref.current.querySelector("."+cx("update-btn")).innerText="수정"
+                                        }}>수정확인</button>
+                                    </form>
+                                }
                             </li>
                         ))
                     }
                 </ul>
+            </div>
+            <div className="d-grid col-md-6 mx-auto mb-5">
+                    <Button variant="success" 
+                        disabled={isLoading}
+                        onClick={handleMoreComment}>
+                        {
+                            isLoading ? 
+                            <span className="spinner-border spinner-grow-sm"></span> 
+                            :
+                            <span>댓글 더보기</span>
+                        }
+                    </Button>
             </div>    
         </div>
     );
