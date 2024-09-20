@@ -58,17 +58,20 @@ function BsNavBar() {
                                 <Button variant="outline-primary" onClick={handleLogout}>Logout</Button>
                             </>
                             :
-                            <Button variant="success" onClick={()=>{
-                                //로그인 모달을 띄우는 action 을 dispatch 한다 
-                                const action = {
-                                    type:"LOGIN_MODAL", 
-                                    payload:{
-                                        show:true,
-                                        message:"로그인 폼 입니다"     
+                            <>
+                                <Button variant="success" onClick={()=>{
+                                    //로그인 모달을 띄우는 action 을 dispatch 한다 
+                                    const action = {
+                                        type:"LOGIN_MODAL", 
+                                        payload:{
+                                            show:true,
+                                            message:"로그인 폼 입니다"     
+                                        }
                                     }
-                                }
-                                dispatch(action)
-                            }}>Sign in</Button>
+                                    dispatch(action)
+                                }}>Sign in</Button>
+                                <Button variant="primary" onClick={()=>navigate("/user/new")}>Sign up</Button>
+                            </>
                         }
                     </Navbar.Collapse>
                 </Container>
