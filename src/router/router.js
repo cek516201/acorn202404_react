@@ -12,6 +12,7 @@ import Home from '../pages/Home'
 import Member from '../pages/Member'
 import MemberForm from '../pages/MemberForm'
 import MemberUpdateForm from '../pages/MemberUpdateForm'
+import UserDetail from '../pages/UserDetail'
 import UserForm from '../pages/UserForm'
 
 const { createBrowserRouter } = require("react-router-dom")
@@ -29,7 +30,8 @@ const routes=[
     {path:"/cafes/new", element: <ProtectedRoute><CafeForm/></ProtectedRoute>},
     {path:"/cafes/:num", element: <CafeDetail/>},
     {path:"/cafes/:num/edit", element : <ProtectedRoute><CafeUpdateForm/></ProtectedRoute>},
-    {path:"/user/new", element:<UserForm/>}
+    {path:"/user/new", element:<UserForm/>},
+    {path:"/user/detail", element:<ProtectedRoute><UserDetail/></ProtectedRoute>}
 ]
 
 //BrowserRouter 를 만들기
