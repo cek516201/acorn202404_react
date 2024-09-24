@@ -3,6 +3,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import AlertModal from "../components/AlertModal"
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 //userName 을 검증할 정규표현식
 const reg_userName=/^[a-zA-Z].{4,9}$/
@@ -69,7 +72,7 @@ function UserForm() {
                 })
             })
             .catch(error=>{
-
+                console.log(error)
             })
         }else if(name === "password"){
             //현재 입력한 내용이 password2 에 입력한 내용과 같은지 알아낸다
@@ -77,7 +80,7 @@ function UserForm() {
 
             setValid({
                 ...isValid,
-                [name]:reg_password.test(value) && isEqual
+                password:reg_password.test(value) && isEqual
             })
 
         }else if(name === "password2"){
@@ -86,7 +89,7 @@ function UserForm() {
 
             setValid({
                 ...isValid,
-                [name]:reg_password.test(value) && isEqual
+                password:reg_password.test(value) && isEqual
             })
 
         }else if(name === "email"){
@@ -97,11 +100,42 @@ function UserForm() {
         }
     }
 
+    //폼 전송 이벤트가 일어 났을때 호출되는 함수 
+    const handleSubmit = (e)=>{
+        e.preventDefault()
+        //axios 를 이용해서 현재까지 입력한 회원정보를 전송한다.
+        axios.post("/user", formData)
+        .then(res=>{
+            console.log(res.data)
+            setAlertShow(true)
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+    }
+    // 알림 모달의 상태관리 
+    const [alertShow, setAlertShow] = useState(false)
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const handleYes = ()=>{
+        //현재 위치를  "/" 최상위 경로로 변경한다.
+        navigate("/")
+        //로그인 모달을 띄워준다.
+        const action = {
+            type:"LOGIN_MODAL",
+            payload:{show:true, message:"가입한 아이디로 로그인 하세요"}
+        }
+        dispatch(action)
+    }
     return (
         <>
+            <AlertModal show={alertShow} message={`${formData.userName} 님 가입 되었습니다`} 
+                yes={handleYes}/>
             <h1>회원 가입 양식</h1>
-            <Form>
-                <Form.Group controlId="id" className="mb-3">
+            <Form onSubmit={handleSubmit} noValidate>
+                <Form.Group controlId="id" className="mb-3" >
                     <Form.Label>아이디</Form.Label>
                     {/* isInvalid 속성은 유효하지 않은지 여부를 관리한다 , isValid 속성은 유효한지여부 */}
                     <Form.Control isValid={isValid.userName} isInvalid={!isValid.userName && isDirty.userName} onChange={handleChange}  type="text" name="userName" placeholder="아이디 입력..."/>
@@ -135,7 +169,7 @@ function UserForm() {
                         이메일 형식에 맞게 입력해 주세요
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Button disabled={!isValid.userName || !isValid.password || !isValid.email} variant="primary" type="submit">가입</Button>
+                <Button type="submit" disabled={!isValid.userName || !isValid.password || !isValid.email} variant="primary" type="submit">가입</Button>
             </Form>
         </>
     );
