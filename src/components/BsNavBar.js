@@ -55,11 +55,11 @@ function BsNavBar() {
                                     <Nav.Link as={Link} to="/user/detail">{userName}</Nav.Link>
                                     <span className="navbar-text">Signed in</span>
                                 </Nav>
-                                <Button size="sm" variant="outline-primary" onClick={handleLogout}>Logout</Button>
+                                <Button className="ms-1" size="sm" variant="outline-primary" onClick={handleLogout}>Logout</Button>
                             </>
                             :
                             <>
-                                <Button size="sm" variant="success" onClick={()=>{
+                                <Button className="me-1" size="sm" variant="success" onClick={()=>{
                                     //로그인 모달을 띄우는 action 을 dispatch 한다 
                                     const action = {
                                         type:"LOGIN_MODAL", 
