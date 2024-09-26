@@ -14,6 +14,7 @@ import MemberForm from '../pages/MemberForm'
 import MemberUpdateForm from '../pages/MemberUpdateForm'
 import UserDetail from '../pages/UserDetail'
 import UserForm from '../pages/UserForm'
+import UserPwdUpdateForm from '../pages/UserPwdUpdateForm'
 import UserUpdateForm from '../pages/UserUpdateForm'
 
 const { createBrowserRouter } = require("react-router-dom")
@@ -33,7 +34,8 @@ const routes=[
     {path:"/cafes/:num/edit", element : <ProtectedRoute><CafeUpdateForm/></ProtectedRoute>},
     {path:"/user/new", element:<UserForm/>},
     {path:"/user/detail", element:<ProtectedRoute><UserDetail/></ProtectedRoute>},
-    {path:"/user/edit", element:<ProtectedRoute><UserUpdateForm/></ProtectedRoute>}
+    {path:"/user/edit", element:<ProtectedRoute><UserUpdateForm/></ProtectedRoute>},
+    {path:"/user/password/edit", element:<ProtectedRoute><UserPwdUpdateForm/></ProtectedRoute>}
 ]
 
 //BrowserRouter 를 만들기
