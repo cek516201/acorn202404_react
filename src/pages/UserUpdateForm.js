@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 //초기 상태로 되돌리기 위해 필요한 변수
 let savedImageSrc
@@ -112,8 +113,12 @@ function UserUpdateForm() {
     const handleReset = ()=>{
         setImageSrc(savedImageSrc)
     }
+
+    const navigate = useNavigate()
+
     //폼 submit 이벤트가 일어 났을때 호출되는 함수
     const handleSubmit = (e)=>{
+        e.preventDefault()
         //이벤트가 일어난 form 요소에 입력하거나 선택된 내용을 FormData 객체로 얻어내기
         const formData = new FormData(e.target)
 
@@ -122,6 +127,8 @@ function UserUpdateForm() {
         })
         .then(res=>{
             console.log(res.data)
+            alert("수정 했습니다")
+            navigate("/user/detail")
         })
         .catch(error=>{
             console.log(error)
@@ -148,7 +155,7 @@ function UserUpdateForm() {
                     <Form.Label>프로필 이미지 ( click or drag-drop to Edit ) </Form.Label>
                     <Form.Control onChange={handleChange} ref={imageInput} style={{display:"none"}} type="file" name="image" accept="image/*"/>
                 </Form.Group>
-                <div>
+                <div className="mb-3">
                     <a href="about:blank" onClick={(e)=>{
                         e.preventDefault()
                         // input  type="file" 요소를 강제 클릭 
@@ -160,7 +167,7 @@ function UserUpdateForm() {
                     </a>
                 </div>
                 <Button type="submit" variant="success" size="sm">수정확인</Button>
-                <Button type="reset" variant="danger" size="sm">Reset</Button>
+                <Button className="ms-1" type="reset" variant="danger" size="sm">Reset</Button>
             </Form>
         </>
     );
