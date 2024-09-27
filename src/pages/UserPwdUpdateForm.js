@@ -1,7 +1,10 @@
 // src/pages/UserPwdUpdateForm.js
 
+import axios from "axios";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // 공백이 아닌 한글자가 1 번이상 반복되어야 통과되는 정규 표현식 
 const reg_password = /^[^\s]+$/
@@ -26,6 +29,12 @@ function UserPwdUpdateForm() {
     const [isDirty, setDirty] = useState({
         password:false,
         newPassword:false
+    })
+
+    //에러메세지를 관리하기 위한 상태값
+    const [error, setError] = useState({
+        show:false,
+        message:""
     })
 
     // input 요소에 change 이벤트가 일어 났을때 실행할 함수 
@@ -71,10 +80,45 @@ function UserPwdUpdateForm() {
         }
     }
 
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    //폼 전송 이벤트가 발생했을때 실행할 함수
+    const handleSubmit = (e)=>{
+        e.preventDefault()
+        axios.patch("/user/password", formData)
+        .then(res=>{
+            console.log(res.data)
+            //정상적으로 비밀번호가 변경되었다면 어떤처리를 해야하나?
+            //1. 로그아웃 처리를 하고
+            delete localStorage.token  
+            //2. 위치를 / 최상위 경로로 변경하고
+            navigate("/")
+            //3. "변경된 비밀번호로 새로 로그인 하세요" 라는  로그인 모달을 띄운다 
+            const payload={
+                show:true,
+                message:"변경된 비밀번호로 다시 로그인 하세요",
+            }
+            //로그인창을 띄우는 action 을 발행하면서 payload 를 전달한다. 
+            dispatch({type:"LOGIN_MODAL", payload })  
+        })
+        .catch(error=>{
+            console.log(error)
+            //에러가 발생하면 어떤 처리를 해야 하나?
+            //에러 메시지
+            const message = error.response.data.message
+            setError({
+                show:true,
+                message
+            })
+        })
+    }
+
     return (
         <>
             <h1>비밀번호 수정 양식</h1>
-            <Form>
+            { error.show && <Alert variant="danger">{error.message}</Alert>}
+            <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>기존 비밀 번호</Form.Label>
                     <Form.Control isValid={isValid.password} 
