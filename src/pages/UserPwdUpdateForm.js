@@ -95,6 +95,13 @@ function UserPwdUpdateForm() {
             //2. 위치를 / 최상위 경로로 변경하고
             navigate("/")
             //3. "변경된 비밀번호로 새로 로그인 하세요" 라는  로그인 모달을 띄운다 
+            alert("비밀 번호를 변경후 로그 아웃 되었습니다.")
+            // 0.1 초 이후에 실행되는 함수 등록 
+            setTimeout(()=>{
+                //아래의 코드가 바로 실행되면 ProtectedRoute 때문에 에러 발생
+                dispatch({type:"UPDATE_USER", payload: null})
+            }, 100)
+
             const payload={
                 show:true,
                 message:"변경된 비밀번호로 다시 로그인 하세요",
