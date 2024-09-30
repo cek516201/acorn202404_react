@@ -126,7 +126,7 @@ function UserPwdUpdateForm() {
             <h1>비밀번호 수정 양식</h1>
             { error.show && <Alert variant="danger">{error.message}</Alert>}
             <Form onSubmit={handleSubmit}>
-                <Form.Group>
+                <Form.Group className="mb-3">
                     <Form.Label>기존 비밀 번호</Form.Label>
                     <Form.Control isValid={isValid.password} 
                         isInvalid={!isValid.password && isDirty.password} onChange={handleChange} type="password" name="password"/>
@@ -134,7 +134,7 @@ function UserPwdUpdateForm() {
                         반드시 입력하세요!
                     </div>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3">
                     <Form.Label>새 비밀 번호</Form.Label>
                     <Form.Control isValid={isValid.newPassword} 
                         isInvalid={!isValid.newPassword && isDirty.newPassword} onChange={handleChange} type="password" name="newPassword"/>
@@ -145,7 +145,7 @@ function UserPwdUpdateForm() {
                         비밀번호를 확인하세요!
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3">
                     <Form.Label>새 비밀 번호 확인</Form.Label>
                     <Form.Control onChange={handleChange} type="password" name="newPassword2"/>
                 </Form.Group>
