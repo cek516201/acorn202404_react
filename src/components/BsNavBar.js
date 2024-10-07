@@ -38,7 +38,7 @@ function BsNavBar() {
     return (
         <>  
             <AlertModal show={alertShow} message={"로그 아웃 되었습니다"} yes={handleYes}/>
-            <Navbar expand="md" className="bg-warning mb-2">
+            <Navbar fixed="top" expand="md" className="bg-warning mb-2">
                 
                 <Container>
                     <Navbar.Brand as={NavLink} to="/">Acorn</Navbar.Brand>

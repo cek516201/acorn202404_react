@@ -85,7 +85,7 @@ function App() {
       <AlertModal show={alertShow} message="5분 뒤에 로그 아웃 됩니다. 다시 로그인 해 주세요"
         yes={()=>setAlertShow(false)}/>
       <BsNavBar/>
-      <div className="container">
+      <div className="container" style={{marginTop:"60px"}}>
         <div>{currentOutlet}</div>
       </div>
        { loginModal.show && <LoginModal onHide={()=>dispatch({type:"LOGIN_MODAL", payload:{show:false}})} show={loginModal.show} message={loginModal.message} url={loginModal.url}/> }
