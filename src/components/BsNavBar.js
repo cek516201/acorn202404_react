@@ -26,6 +26,8 @@ function BsNavBar() {
         navigate("/")
         // 알림 모달 띄우기
         setAlertShow(true)
+        // axios 의 요청 Header 에 설정된값 초기화 하기
+        delete axios.defaults.headers.common["Authorization"]
     }
 
     const handleYes = ()=>{
