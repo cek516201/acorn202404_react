@@ -5,7 +5,7 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import BsNavBar from './components/BsNavBar';
 import LoginModal from './components/LoginModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 //함수형 component
 function App() {
@@ -14,14 +14,16 @@ function App() {
   const currentOutlet = useOutlet()
   //로그인 모달과 관련된 값을 redux store 로 부터 읽어온다.
   const loginModal = useSelector(state => state.loginModal)
-  
+  //action 을 발생하기 위한 함수
+  const dispatch=useDispatch()
+
   return (
     <>
       <BsNavBar/>
       <div className="container">
         <div>{currentOutlet}</div>
       </div>
-       { loginModal.show && <LoginModal show={loginModal.show} message={loginModal.message} url={loginModal.url}/> }
+       { loginModal.show && <LoginModal onHide={()=>dispatch({type:"LOGIN_MODAL", payload:{show:false}})} show={loginModal.show} message={loginModal.message} url={loginModal.url}/> }
     </>
   );
 }
