@@ -12,6 +12,7 @@ import Home from '../pages/Home'
 import Member from '../pages/Member'
 import MemberForm from '../pages/MemberForm'
 import MemberUpdateForm from '../pages/MemberUpdateForm'
+import NotFound from '../pages/NotFound'
 import UserDetail from '../pages/UserDetail'
 import UserForm from '../pages/UserForm'
 import UserPwdUpdateForm from '../pages/UserPwdUpdateForm'
@@ -38,7 +39,8 @@ const routes=[
     {path:"/user/new", element:<UserForm/>},
     {path:"/user/detail", element:<ProtectedRoute><UserDetail/></ProtectedRoute>},
     {path:"/user/edit", element:<ProtectedRoute><UserUpdateForm/></ProtectedRoute>},
-    {path:"/user/password/edit", element:<ProtectedRoute><UserPwdUpdateForm/></ProtectedRoute>}
+    {path:"/user/password/edit", element:<ProtectedRoute><UserPwdUpdateForm/></ProtectedRoute>},
+    {path:"*", element:<NotFound/>}
 ]
 
 //BrowserRouter 를 만들기
